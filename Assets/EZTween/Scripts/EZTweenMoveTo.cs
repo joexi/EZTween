@@ -5,8 +5,8 @@ using UnityEngine;
 public class EZTweenMoveTo : EZTween {
 	public Vector3 FromPostion;
 	public Vector3 ToPosition;
-	private Vector3 Speed;
-
+	private Vector3 FromPostionRuntime;
+	private Vector3 DeltaPositionRuntime;
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -15,11 +15,12 @@ public class EZTweenMoveTo : EZTween {
 	public override void Restart ()
 	{
 		base.Restart ();
-		Speed = (ToPosition - FromPostion) / Duration;
+		FromPostionRuntime = FromPostion;
+		DeltaPositionRuntime = ToPosition - FromPostion;
 		if (IsLocal) {
-			this.transform.localPosition = FromPostion;
+			this.transform.localPosition = FromPostionRuntime;
 		} else {
-			this.transform.position = FromPostion;
+			this.transform.position = FromPostionRuntime;
 		}
 		LeftTime = Duration;
 	}
@@ -32,11 +33,13 @@ public class EZTweenMoveTo : EZTween {
 			if (this.LeftTime <= 0) {
 				this.End ();
 			} else {
+//				Debug.LogError ((this.Duration - this.LeftTime) + " _ " + FromPostionRuntime + " _ " + ToPositionRuntime + " _ " + this.Duration);
 				if (IsLocal) {
-					this.transform.localPosition += Speed * Time.deltaTime;
+					this.transform.localPosition = this.Vector3TweenFunc ((this.Duration - this.LeftTime), FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 				} else {
-					this.transform.position += Speed * Time.deltaTime;
+					this.transform.position = this.Vector3TweenFunc ((this.Duration - this.LeftTime), FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 				}
+				Debug.LogError (this.transform.localPosition);
 			}
 		}
 	}
@@ -62,7 +65,9 @@ public class EZTweenMoveTo : EZTween {
 	public override void BeginPingpong ()
 	{
 		base.BeginPingpong ();
-		Speed = (FromPostion - ToPosition) / Duration;
+		FromPostionRuntime = ToPosition;
+		DeltaPositionRuntime = FromPostion - ToPosition;
 		LeftTime = Duration;
+
 	}
 }

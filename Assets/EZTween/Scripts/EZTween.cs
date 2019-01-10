@@ -2,7 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EZTweenType {
+	None = 0,
+	Linear = 1,
+	QuadEaseOut = 2,
+	QuadEaseIn = 3,
+}
+
 public class EZTween : MonoBehaviour {
+	protected delegate float EZTweenDelegateFloat (float t, float b, float c, float d);
+	protected delegate Vector3 EZTweenDelegateVector3 (float t, Vector3 b, Vector3 c, float d);
+	protected EZTweenDelegateFloat FloatTweenFunc;
+	protected EZTweenDelegateVector3 Vector3TweenFunc;
+
+	public EZTweenType TweenType;
 	public bool IsLocal;
 	public float Delay;
 	public float Duration;
@@ -61,6 +74,27 @@ public class EZTween : MonoBehaviour {
 		LifeTime = 0;
 		IsRunning = true;
 		LifeCount++;
+		switch (this.TweenType) {
+		case EZTweenType.None:
+		case EZTweenType.Linear:
+			{
+				this.FloatTweenFunc = EZTweenMath.Linear;
+				this.Vector3TweenFunc = EZTweenMath.Linear;
+				break;
+			}
+		case EZTweenType.QuadEaseIn:
+			{
+				this.FloatTweenFunc = EZTweenMath.QuadEaseIn;
+				this.Vector3TweenFunc = EZTweenMath.QuadEaseIn;
+				break;
+			}
+		case EZTweenType.QuadEaseOut:
+			{
+				this.FloatTweenFunc = EZTweenMath.QuadEaseOut;
+				this.Vector3TweenFunc = EZTweenMath.QuadEaseOut;
+				break;
+			}
+		}
 	}
 
 	public virtual void Stop () {
@@ -76,4 +110,10 @@ public class EZTween : MonoBehaviour {
 		LifeCount = 0;
 		IsRunning = false;
 	}
+
+	public virtual void Finshed() {
+		
+	}
+
+
 }
