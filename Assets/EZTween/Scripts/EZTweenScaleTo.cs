@@ -5,7 +5,7 @@ using UnityEngine;
 public class EZTweenScaleTo : EZTween {
 	public Vector3 FromScale = Vector3.one;
 	public Vector3 ToScale;
-	private Vector3 Speed;
+	private Vector3 DeltaScaleRuntime;
 
 	protected override void Awake ()
 	{
@@ -15,21 +15,15 @@ public class EZTweenScaleTo : EZTween {
 	public override void Restart ()
 	{
 		base.Restart ();
-		Speed = (ToScale - FromScale) / Duration;
+		DeltaScaleRuntime = ToScale - FromScale;
 		this.transform.localScale = FromScale;
-		LeftTime = Duration;
 	}
 
 	protected override void Update ()
 	{
 		base.Update ();
-		if (this.LeftTime > 0) {
-			this.LeftTime -= Time.deltaTime;
-			if (this.LeftTime <= 0) {
-				this.End ();
-			} else {
-				this.transform.localScale += Speed * Time.deltaTime;
-			}
+		if (this.IsRunning) {
+			this.transform.localScale = this.Vector3TweenFunc (this.RunningTime, FromScale, DeltaScaleRuntime, this.Duration);
 		}
 	}
 
@@ -46,8 +40,6 @@ public class EZTweenScaleTo : EZTween {
 	public override void BeginPingpong ()
 	{
 		base.BeginPingpong ();
-		Speed = (FromScale - ToScale) / Duration;
-		LeftTime = Duration;
 	}
 
 }

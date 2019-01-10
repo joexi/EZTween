@@ -25,7 +25,7 @@ public class EZTween : MonoBehaviour {
 
 	protected int LifeCount;
 	protected float LifeTime;
-	protected float LeftTime;
+	protected float RunningTime;
 
 	protected bool IsRunning;
 	protected bool IsPingponging;
@@ -53,6 +53,21 @@ public class EZTween : MonoBehaviour {
 				this.Restart ();
 			}
 		}
+		if (IsPingponging) {
+			if (this.RunningTime > 0) {
+				this.RunningTime -= Time.deltaTime;
+				if (this.RunningTime <= 0) {
+					this.End ();
+				}
+			}
+		} else {
+			if (this.RunningTime < Duration) {
+				this.RunningTime += Time.deltaTime;
+				if (this.RunningTime >= Duration) {
+					this.End ();
+				}
+			}
+		}
 	}
 
 	public virtual void End() {
@@ -60,6 +75,8 @@ public class EZTween : MonoBehaviour {
 			if (!this.IsPingponging) {
 				BeginPingpong ();
 				return;
+			} else {
+				EndPingpong ();
 			}
 		}
 
@@ -70,7 +87,12 @@ public class EZTween : MonoBehaviour {
 		IsPingponging = true;
 	}
 
+	public virtual void EndPingpong() {
+		IsPingponging = false;
+	}
+
 	public virtual void Restart () {
+		RunningTime = 0;
 		LifeTime = 0;
 		IsRunning = true;
 		LifeCount++;

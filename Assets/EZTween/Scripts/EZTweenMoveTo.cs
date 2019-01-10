@@ -22,24 +22,16 @@ public class EZTweenMoveTo : EZTween {
 		} else {
 			this.transform.position = FromPostionRuntime;
 		}
-		LeftTime = Duration;
 	}
 
 	protected override void Update ()
 	{
 		base.Update ();
-		if (this.LeftTime > 0) {
-			this.LeftTime -= Time.deltaTime;
-			if (this.LeftTime <= 0) {
-				this.End ();
+		if (this.IsRunning) {
+			if (IsLocal) {
+				this.transform.localPosition = this.Vector3TweenFunc (this.RunningTime, FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 			} else {
-//				Debug.LogError ((this.Duration - this.LeftTime) + " _ " + FromPostionRuntime + " _ " + ToPositionRuntime + " _ " + this.Duration);
-				if (IsLocal) {
-					this.transform.localPosition = this.Vector3TweenFunc ((this.Duration - this.LeftTime), FromPostionRuntime, DeltaPositionRuntime, this.Duration);
-				} else {
-					this.transform.position = this.Vector3TweenFunc ((this.Duration - this.LeftTime), FromPostionRuntime, DeltaPositionRuntime, this.Duration);
-				}
-				Debug.LogError (this.transform.localPosition);
+				this.transform.position = this.Vector3TweenFunc (this.RunningTime, FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 			}
 		}
 	}
@@ -65,9 +57,5 @@ public class EZTweenMoveTo : EZTween {
 	public override void BeginPingpong ()
 	{
 		base.BeginPingpong ();
-		FromPostionRuntime = ToPosition;
-		DeltaPositionRuntime = FromPostion - ToPosition;
-		LeftTime = Duration;
-
 	}
 }

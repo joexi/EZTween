@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EZTweenMoveBy : EZTween {
 	public Vector3 DeltaPosition;
-	private Vector3 Speed;
-
+	private Vector3 FromPostionRuntime;
+	private Vector3 DeltaPositionRuntime;
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -14,23 +14,22 @@ public class EZTweenMoveBy : EZTween {
 	public override void Restart ()
 	{
 		base.Restart ();
-		Speed = DeltaPosition / Duration;
-		LeftTime = Duration;
+		if (IsLocal) {
+			FromPostionRuntime = this.transform.localPosition;
+		} else {
+			FromPostionRuntime = this.transform.position;
+		}
+		DeltaPositionRuntime = DeltaPosition;
 	}
 
 	protected override void Update ()
 	{
 		base.Update ();
-		if (this.LeftTime > 0) {
-			this.LeftTime -= Time.deltaTime;
-			if (this.LeftTime <= 0) {
-				this.End ();
+		if (IsRunning) {
+			if (IsLocal) {
+				this.transform.localPosition = this.Vector3TweenFunc (this.RunningTime, FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 			} else {
-				if (IsLocal) {
-					this.transform.localPosition += Speed * Time.deltaTime;
-				} else {
-					this.transform.position += Speed * Time.deltaTime;
-				}
+				this.transform.position = this.Vector3TweenFunc (this.RunningTime, FromPostionRuntime, DeltaPositionRuntime, this.Duration);
 			}
 		}
 	}
@@ -43,7 +42,5 @@ public class EZTweenMoveBy : EZTween {
 	public override void BeginPingpong ()
 	{
 		base.BeginPingpong ();
-		Speed = - DeltaPosition / Duration;
-		LeftTime = Duration;
 	}
 }
