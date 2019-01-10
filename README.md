@@ -1,8 +1,13 @@
 # EZTween
-Lite tween framework for unity
+Simple and fast tween framework for unity
 # Provide
 * Move
 * Rotate
 * Scale
 * EaseInOut
 * RepeatCount
+* no gc
+
+# Todo
+* Curve
+* Sequence
