@@ -59,7 +59,6 @@ public class EZTween : MonoBehaviour {
 
 	public virtual void Restart () {
 		LifeTime = 0;
-		LifeCount = 0;
 		IsRunning = true;
 		LifeCount++;
 	}
@@ -70,5 +69,11 @@ public class EZTween : MonoBehaviour {
 
 	public virtual void Resume () {
 
+	}
+
+	public virtual void Clear() {
+		LifeTime = 0;
+		LifeCount = 0;
+		IsRunning = false;
 	}
 }
