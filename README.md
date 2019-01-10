@@ -4,5 +4,5 @@ Lite tween framework for unity
 * Move
 * Rotate
 * Scale
-* Local and world for all tween 
-* Pingpong for all tween
+* EaseInOut
+* RepeatCount
